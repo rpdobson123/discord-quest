@@ -1,0 +1,24 @@
+{
+  "name": "discord-quest",
+  "version": "1.0.0",
+  "description": "an mmo that runs on discord",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rpdobson123/discord-quest.git"
+  },
+  "keywords": [
+    "mud",
+    "mmo",
+    "discord"
+  ],
+  "author": "Richard Dobson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rpdobson123/discord-quest/issues"
+  },
+  "homepage": "https://github.com/rpdobson123/discord-quest#readme"
+}
