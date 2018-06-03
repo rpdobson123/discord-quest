@@ -1,0 +1,23 @@
+# dependencies
+node_modules
+
+.vscode
+.idea
+
+# production
+build
+lib
+
+# misc
+.DS_Store
+.env
+npm-debug.log
+.eslintcache
+.history
+
+# logs
+yarn-error.log
+yarn.lock
+newrelic_agent.log
+lerna-debug.log
+npm-debug.log

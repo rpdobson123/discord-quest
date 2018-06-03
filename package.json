@@ -20,5 +20,15 @@
   "bugs": {
     "url": "https://github.com/rpdobson123/discord-quest/issues"
   },
-  "homepage": "https://github.com/rpdobson123/discord-quest#readme"
+  "homepage": "https://github.com/rpdobson123/discord-quest#readme",
+  "dependencies": {
+    "bufferutil": "^3.0.5",
+    "discord.js": "^11.3.2",
+    "erlpack": "github:discordapp/erlpack",
+    "libsodium-wrappers": "^0.7.3",
+    "node-opus": "^0.2.9",
+    "opusscript": "0.0.6",
+    "sodium": "^2.0.3",
+    "uws": "^9.148.0"
+  }
 }
