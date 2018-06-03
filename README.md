@@ -7,4 +7,4 @@ Then fill in everything under REQUIRED
 
 Then run
 
-`nf run node .`
+`nf run nodemon .`

@@ -10,7 +10,11 @@
     "type": "git",
     "url": "git+https://github.com/rpdobson123/discord-quest.git"
   },
-  "keywords": ["mud", "mmo", "discord"],
+  "keywords": [
+    "mud",
+    "mmo",
+    "discord"
+  ],
   "author": "Richard Dobson",
   "license": "ISC",
   "bugs": {
@@ -22,9 +26,11 @@
     "discord.js": "^11.3.2",
     "erlpack": "github:discordapp/erlpack",
     "foreman": "^3.0.0",
+    "knex": "^0.14.6",
     "libsodium-wrappers": "^0.7.3",
     "node-opus": "^0.2.9",
     "opusscript": "0.0.6",
+    "pg": "^7.4.3",
     "sodium": "^2.0.3",
     "uws": "^9.148.0"
   }
