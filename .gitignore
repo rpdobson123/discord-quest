@@ -7,6 +7,8 @@ node_modules
 # production
 build
 lib
+dist
+.cache
 
 # misc
 .DS_Store
