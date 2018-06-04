@@ -38,15 +38,16 @@ const Descriptors = {
     );
 
     entityRecord = await entity.getBy(entityId, "id");
+    const genderIndex = _.findKey(results, { key: "gender" });
+    const gender = genderIndex && results[genderIndex].value;
+    results.splice(genderIndex, 1);
+
     if (!results.length) {
       return detailLevel > 1 && entityRecord.name
-        ? `is some entity who you know only by name.`
+        ? `, some entity who you know only by name.`
         : `, an entity entirely unknown to you.`;
     }
-    const genderIndex = _.findKey(results, { key: "gender" });
-    const gender = genderIndex && results[genderIndex];
-    const records = _.omit(results, [genderIndex]);
-    const descriptions = _.map(records, (descriptor, key) => {
+    const descriptions = _.map(results, (descriptor, key) => {
       const description = this.getDescription(
         entity.name,
         descriptor,
@@ -55,7 +56,6 @@ const Descriptors = {
       );
       return `${description.join(" ")}`;
     });
-
     switch (descriptions.length) {
       case 1:
         return descriptions[0];
@@ -63,13 +63,13 @@ const Descriptors = {
         return `${descriptions[0]} and ${descriptions[1]}`;
       default:
         const last = descriptions.pop();
-        return `${descriptions.join(". ")}, and ${last}}`;
+        return `${descriptions.join(". ")}, and ${last}`;
     }
   },
 
   getDescription(name, descriptor, gender, index) {
     const description = [];
-    if (index !== "0") {
+    if (index !== 0 && descriptor.usePronoun) {
       if (gender === "male") {
         description.push(descriptor.usePosessive ? "he" : "his");
       } else if (gender === "female") {

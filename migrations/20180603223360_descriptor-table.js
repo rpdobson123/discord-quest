@@ -9,6 +9,7 @@ exports.up = function(knex, Promise) {
       value text,
       helper_verb text,
       use_posessive boolean default true,
+      use_pronoun boolean default true,
       use_key boolean default true,
       article text
     );
