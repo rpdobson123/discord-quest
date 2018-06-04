@@ -29,7 +29,7 @@ const Character = {
     if (!character.id) {
       return await this.create(characterName, author);
     } else {
-      if (User.getBy(author, "author").id === character.id) {
+      if (User.getBy(author, "author").id === character.user_id) {
         return character;
       } else {
         author.send(

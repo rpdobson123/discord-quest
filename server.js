@@ -49,15 +49,14 @@ client.on("message", async message => {
         }
         break;
       case "describeme":
-        console.log({ characterRecord });
         if (!characterRecord.id) {
           sendMsg("You are not born yet. Type /joinAs {name}.", author);
         } else {
-          console.log(characterRecord.name);
           sendMsg(
-            `${characterRecord.name} is ${await Character.describe(
+            `${characterRecord.name} ${await Character.describe(
               characterRecord
-            )}`
+            )}`,
+            message.channel
           );
         }
         break;
