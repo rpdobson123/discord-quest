@@ -44,7 +44,9 @@ client.on("message", async message => {
           }
           const description = await Character.describe(character);
           sendMsg(
-            `${author.username} switched to ${character.name}, ${description}`
+            `${author.username} switched to ${
+              character.name
+            }, who ${description}`
           );
         }
         break;
