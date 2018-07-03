@@ -22,6 +22,20 @@ exports.up = async function(knex, Promise) {
       channel_name: _.kebabCase(process.env.HUB_NAME)
     })
     .into("locations");
+  await knex
+    .insert({
+      entity: "location",
+      entity_id: 1,
+      detail_level: 1,
+      key: process.env.HUB_NAME,
+      adjective: process.env.HUB_ADJECTIVE,
+      helper_verb: "is in",
+      use_posessive: "FALSE",
+      use_pronoun: "FALSE",
+      use_key: "TRUE",
+      article: "the"
+    })
+    .into("descriptors");
 };
 
 exports.down = async function(knex, Promise) {
