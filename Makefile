@@ -22,3 +22,8 @@ migration:
 		read -r -p "name: " MIGRATION_NAME; \
 	done ; \
 	nf run knex migrate:make "$$MIGRATION_NAME"
+
+
+.PHONY: bootstrap
+bootstrap:
+	make migrate; make start
