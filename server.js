@@ -1,13 +1,19 @@
+const knex = require("knex")({
+  client: "postgres",
+  connection: process.env.DATABASE_URL
+});
 const Character = new require("./models/character.js");
 const User = new require("./models/user.js");
 const Discord = require("discord.js");
-
+const Promise = require("bluebird");
+const _ = require("lodash");
 const client = new Discord.Client();
-
+let generalChannel;
 client.login(process.env.DISCORD_TOKEN);
 
-client.on("ready", () => {
+client.on("ready", async () => {
   console.log("Ready!");
+  await createAppropriateChannels();
   if (process.env.ENV === "Test") {
     sendMsg("The server just redeployed - Hello!");
   }
@@ -89,6 +95,38 @@ const onUserJoin = async author => {
   sendMsg(`Welcome to the world, ${userName}!`);
 };
 
-const sendMsg = (msg, channel = client.channels.get("452935723515904033")) => {
+const sendMsg = (msg, channel = generalChannel) => {
   return channel.send(msg);
+};
+
+const createAppropriateChannels = async () => {
+  const results = await knex("locations")
+    .select("channel_name")
+    .where({ active: true });
+  const channelNames = _.map(results, result => {
+    return result.channel_name;
+  });
+
+  _.each(channelNames, channelName => {
+    channel = client.channels.find("name", channelName);
+
+    if (!channel) {
+      client.guilds.first().createChannel(channelName, "text");
+    }
+  });
+
+  generalChannel = client.channels.find(
+    "name",
+    process.env.GENERAL_CHANNEL_NAME
+  );
+
+  if (!generalChannel) {
+    client.guilds
+      .first()
+      .createChannel(process.env.GENERAL_CHANNEL_NAME, "text");
+    generalChannel = client.channels.find(
+      "name",
+      process.env.GENERAL_CHANNEL_NAME
+    );
+  }
 };
