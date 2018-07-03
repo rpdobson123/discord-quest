@@ -55,7 +55,6 @@ const Descriptors = {
       );
       return description;
     });
-    console.log({ descriptions });
 
     if (entityRecord.locationId) {
       const location = await Location.getBy(entityRecord.locationId);
@@ -89,7 +88,7 @@ const Descriptors = {
 
   getDescription(name, descriptor, gender, index = 0) {
     const description = [];
-    console.log({ descriptor, index });
+
     if (index !== 0 && descriptor.usePronoun) {
       if (gender === "male") {
         description.push(descriptor.usePosessive ? "he" : "his");
