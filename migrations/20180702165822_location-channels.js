@@ -33,7 +33,7 @@ exports.up = async function(knex, Promise) {
       use_posessive: "FALSE",
       use_pronoun: "FALSE",
       use_key: "TRUE",
-      article: "the"
+      article: "the"test breaking change
     })
     .into("descriptors");
 };
