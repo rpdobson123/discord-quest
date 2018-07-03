@@ -1,5 +1,6 @@
 const _ = require("lodash");
 const User = require("./user");
+const Location = require("./location");
 const knex = require("knex")({
   client: "postgres",
   connection: process.env.DATABASE_URL
@@ -7,17 +8,18 @@ const knex = require("knex")({
 
 const Descriptors = {
   async getById(entityId, entity, detailLevel = 2) {
+    if (!entity) {
+      throw new Error("developer error");
+    }
     const results = await knex("descriptors")
       .select("*")
       .where({
-        entity: entity.name,
+        entity: entity,
         entity_id: entityId
       })
       .andWhere("detail_level", "<=", detailLevel);
-    return _.map(results, result => {
-      _.mapKeys(results, result => {
-        return _.camelCase(result.key);
-      });
+    return _.mapKeys(results, result => {
+      return _.camelCase(result.key);
     });
   },
 
@@ -39,14 +41,11 @@ const Descriptors = {
 
     entityRecord = await entity.getBy(entityId, "id");
     const genderIndex = _.findKey(results, { key: "gender" });
-    const gender = genderIndex && results[genderIndex].value;
-    results.splice(genderIndex, 1);
-
-    if (!results.length) {
-      return detailLevel > 1 && entityRecord.name
-        ? `, some entity who you know only by name.`
-        : `, an entity entirely unknown to you.`;
+    const gender = genderIndex && results[genderIndex].adjective;
+    if (genderIndex) {
+      results.splice(genderIndex, 1);
     }
+
     const descriptions = _.map(results, (descriptor, key) => {
       const description = this.getDescription(
         entity.name,
@@ -54,8 +53,29 @@ const Descriptors = {
         gender,
         key
       );
-      return `${description.join(" ")}`;
+      return description;
     });
+    console.log({ descriptions });
+
+    if (entityRecord.locationId) {
+      const location = await Location.getBy(entityRecord.locationId);
+      const descriptors = await this.getById(location.id, "location");
+      _.each(descriptors, result => {
+        const descriptor = _.mapKeys(result, (value, key) => {
+          return _.camelCase(key);
+        });
+        descriptions.push(
+          this.getDescription("location", descriptor, null, descriptions.length)
+        );
+      });
+    }
+
+    if (!descriptions.length) {
+      return detailLevel > 1 && entityRecord.name
+        ? `is some entity who you know only by name.`
+        : `is a concept entirely unknown to you.`;
+    }
+
     switch (descriptions.length) {
       case 1:
         return descriptions[0];
@@ -67,8 +87,9 @@ const Descriptors = {
     }
   },
 
-  getDescription(name, descriptor, gender, index) {
+  getDescription(name, descriptor, gender, index = 0) {
     const description = [];
+    console.log({ descriptor, index });
     if (index !== 0 && descriptor.usePronoun) {
       if (gender === "male") {
         description.push(descriptor.usePosessive ? "he" : "his");
@@ -86,20 +107,20 @@ const Descriptors = {
       description.push(descriptor.helperVerb);
     }
     if (descriptor.article) {
-      const nextWord = descriptor.value || descriptor.key;
+      const nextWord = descriptor.adjective || descriptor.key;
       const letterIsVowel = _.includes(["a", "e", "i", "o", "u"], nextWord[0]);
       if (descriptor.article === "a" && letterIsVowel) {
         descriptor.article = "an";
       }
       description.push(descriptor.article);
     }
-    if (descriptor.value) {
-      description.push(descriptor.value);
+    if (descriptor.adjective) {
+      description.push(descriptor.adjective);
     }
     if (descriptor.useKey) {
       description.push(descriptor.key);
     }
-    return description;
+    return description.join(" ");
   }
 };
 

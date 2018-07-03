@@ -10,9 +10,9 @@ client.on("ready", () => {
   console.log("Ready!");
 });
 
-client.on("guildMemberUpdate", async author => {
-  const user = User.findOrCreate(user);
-});
+// client.on("guildMemberUpdate", async author => {
+//   // const user = User.findOrCreate(user);
+// });
 
 client.on("guildMemberAdd", async author => {
   sendMsg(`Welcome, welcome ${author.nick}!`);
@@ -24,16 +24,22 @@ client.on("message", async message => {
   if (message.content[0] !== "/") {
     return;
   }
-
-  const input = message.content.substring(1).split(" ");
+  const [command, ...args] = message.content.substr(1).split(" ");
   const author = message.author;
   const userRecord = await User.findOrCreate(author, "author");
   const characterRecord = await User.getActiveCharacter(author);
 
   try {
-    switch (input[0]) {
+    switch (command) {
+      case "help":
+        sendMsg(`You can use the following commands:
+          /describeme - describe your character
+          /joinAs (character name)
+        `);
+        break;
+      case "joinas":
       case "joinAs":
-        const character = await Character.findOrCreate(input[1], author);
+        const character = await Character.findOrCreate(args.join(" "), author);
         if (character) {
           await User.setActiveCharacter(userRecord.id, character.id);
           if (!message.member.hasPermission("ADMINISTRATOR")) {
@@ -42,6 +48,7 @@ client.on("message", async message => {
               "Active Character"
             );
           }
+
           const description = await Character.describe(character);
           sendMsg(
             `${author.username} switched to ${
@@ -50,8 +57,9 @@ client.on("message", async message => {
           );
         }
         break;
+      case "describeMe":
       case "describeme":
-        if (!characterRecord.id) {
+        if (!characterRecord) {
           sendMsg("You are not born yet. Type /joinAs {name}.", author);
         } else {
           sendMsg(

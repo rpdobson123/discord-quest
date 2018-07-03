@@ -1,0 +1,32 @@
+const _ = require("lodash");
+
+exports.up = async function(knex, Promise) {
+  await knex.schema.raw(`
+    CREATE TABLE locations (
+        id SERIAL NOT NULL PRIMARY KEY,
+        channel_name text not null,
+        volatile boolean default true,
+        name text
+    )
+  `);
+  await knex.schema.alterTable("characters", table => {
+    table
+      .integer("location_id")
+      .notNull()
+      .defaultTo(1);
+  });
+
+  await knex
+    .insert({
+      name: process.env.HUB_NAME,
+      channel_name: _.kebabCase(process.env.HUB_NAME)
+    })
+    .into("locations");
+};
+
+exports.down = async function(knex, Promise) {
+  await knex.schema.raw(`DROP TABLE locations;`);
+  await knex.schema.alterTable("characters", table => {
+    table.dropColumn("location_id");
+  });
+};

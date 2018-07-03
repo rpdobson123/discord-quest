@@ -22,7 +22,7 @@ exports.up = async function(knex, Promise) {
       entity_id int4,
       detail_level int4 default 1,
       key text,
-      value text,
+      adjective text,
       helper_verb text,
       use_posessive boolean default true,
       use_pronoun boolean default true,

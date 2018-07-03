@@ -26,15 +26,20 @@ const Character = {
 
   async findOrCreate(characterName, author) {
     const character = await this.getBy(characterName, "name");
+    const user = await User.getBy(author, "author");
     if (!character.id) {
-      return await this.create(characterName, author);
+      return await this.create(
+        characterName[0].toUpperCase() + characterName.substr(1),
+        author
+      );
     } else {
-      if (User.getBy(author, "author").id === character.user_id) {
+      if (user.id === character.userId) {
         return character;
       } else {
         author.send(
           `Sorry - that character already belongs to ${User.username}!`
         );
+        return;
       }
     }
   },
