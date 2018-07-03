@@ -8,6 +8,9 @@ client.login(process.env.DISCORD_TOKEN);
 
 client.on("ready", () => {
   console.log("Ready!");
+  if (process.env.ENV === "Test") {
+    sendMsg("The server just redeployed - Hello!");
+  }
 });
 
 // client.on("guildMemberUpdate", async author => {
