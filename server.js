@@ -42,9 +42,14 @@ client.on("message", async message => {
     switch (command) {
       case "help":
         sendMsg(`You can use the following commands:
-          /describeme - describe your character
+          /describeMe - describe your character
+          /viewquests
           /joinAs (character name)
         `);
+        break;
+      case "viewQuests":
+      case "viewquests":
+        sendMsg(`In progress....`);
         break;
       case "joinas":
       case "joinAs":
